@@ -6,7 +6,7 @@ wxIMPLEMENT_APP(UnwordlerApp);
 
 bool UnwordlerApp::OnInit()
 {
-    MyFrame *frame = new MyFrame();
+    wxFrame *frame = new MyFrame();
     frame->Show(true);
     return true;
 }
@@ -33,9 +33,12 @@ void MyFrame::InitMenubar() {
 }
 
 MyFrame::MyFrame()
-    : wxFrame(NULL, wxID_ANY, "Unwordler")
+    : wxFrame(NULL, wxID_ANY, "Unwordler", wxDefaultPosition, wxSize(400,300)),
+    grid_{std::make_unique<MyGrid>(this, 5, 5)}
 {
     MyFrame::InitMenubar();
+    grid_->Show(false);
+    grid_->Show(true);
 }
 
 void MyFrame::OnExit(wxCommandEvent& event)
