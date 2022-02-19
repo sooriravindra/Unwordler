@@ -16,7 +16,7 @@ MyGrid::MyGrid(MyFrame* F, int rows, int columns)
 }
 
 bool MyGrid::SetRow(int srow, std::string s) {
-  if (s.length() != columns_) {
+  if (s.length() == 0 && s.length() != columns_) {
     std::cout << "Word length doesn't match with number of columns"
               << std::endl;
     return false;
@@ -27,7 +27,13 @@ bool MyGrid::SetRow(int srow, std::string s) {
     return false;
   }
 
-  // TODO: Set row 'srow' to the text in string 's'
+  // Set to uppercase for consistency
+  std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+
+  for (auto i = 0; i < s.length(); i++) {
+    auto b = gridButtons_[i + srow * columns_];
+    b->SetLabel(std::string(1, s.at(i)));
+  }
 
   return true;
 }

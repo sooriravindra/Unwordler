@@ -37,6 +37,8 @@ MyFrame::MyFrame()
   MyFrame::InitMenubar();
   grid_->Show(false);
   grid_->Show(true);
+  grid_->SetRow(0, "Hello");
+  grid_->SetRow(2, "World");
 }
 
 void MyFrame::OnExit(wxCommandEvent &event) { Close(true); }
