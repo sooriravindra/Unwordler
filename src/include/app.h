@@ -6,7 +6,10 @@
 
 #include <memory>
 
+enum class ButtonColor { Green, Amber, Grey };
+
 class MyGrid;
+class MyButton;
 
 class UnwordlerApp : public wxApp {
  public:
@@ -33,8 +36,18 @@ class MyGrid {
 
  private:
   MyFrame* frame_;
-  std::vector<wxButton*> gridButtons_;
+  std::vector<MyButton*> gridButtons_;
   wxButton* goButton_;
   int rows_;
   int columns_;
+};
+
+class MyButton : public wxButton {
+ public:
+  MyButton(wxWindow* parent, wxWindowID id, const wxString& label,
+           const wxPoint& pos);
+  void ToggleColor(wxCommandEvent& ev);
+
+ private:
+  ButtonColor color_ = ButtonColor::Grey;
 };

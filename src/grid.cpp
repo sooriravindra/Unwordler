@@ -7,7 +7,7 @@ MyGrid::MyGrid(MyFrame* F, int rows, int columns)
   for (auto j = 0; j < rows_; j++) {
     for (auto i = 0; i < columns_; i++) {
       gridButtons_.push_back(
-          new wxButton(frame_, i, _T("."), wxPoint(80 * i, 40 * j)));
+          new MyButton(frame_, i, _T("."), wxPoint(80 * i, 40 * j)));
     }
   }
 
