@@ -35,10 +35,6 @@ MyFrame::MyFrame()
     : wxFrame(NULL, wxID_ANY, "Unwordler", wxDefaultPosition, wxSize(400, 300)),
       grid_{std::make_unique<MyGrid>(this, 5, 5)} {
   MyFrame::InitMenubar();
-  grid_->Show(false);
-  grid_->Show(true);
-  grid_->SetRow(0, "Hello");
-  grid_->SetRow(2, "World");
 }
 
 void MyFrame::OnExit(wxCommandEvent &event) { Close(true); }

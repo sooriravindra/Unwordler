@@ -20,5 +20,6 @@ void MyButton::ToggleColor(wxCommandEvent &ev) {
     case ButtonColor::Green:
       SetBackgroundColour(wxNullColour);  // Grey
       color_ = ButtonColor::Grey;
+      break;
   }
 }

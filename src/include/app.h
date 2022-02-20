@@ -5,11 +5,13 @@
 #endif
 
 #include <memory>
+#include <set>
 
 enum class ButtonColor { Green, Amber, Grey };
 
 class MyGrid;
 class MyButton;
+class WordEngine;
 
 class UnwordlerApp : public wxApp {
  public:
@@ -28,18 +30,23 @@ class MyFrame : public wxFrame {
   std::unique_ptr<MyGrid> grid_;
 };
 
-class MyGrid {
+class MyGrid : public wxEvtHandler {
  public:
-  MyGrid(MyFrame* F, int rows, int columns);
+  MyGrid(MyFrame* F, uint32_t rows, uint32_t columns);
+  ~MyGrid();
   void Show(bool);
-  bool SetRow(int, std::string);
+  void GoClick(wxCommandEvent& ev);
 
  private:
   MyFrame* frame_;
   std::vector<MyButton*> gridButtons_;
   wxButton* goButton_;
-  int rows_;
-  int columns_;
+  uint32_t rows_;
+  uint32_t columns_;
+  int curr_row_{-1};
+  bool DisableRow(int row);
+  bool SetRow(int, std::string);
+  std::unique_ptr<WordEngine> wordEngine_;
 };
 
 class MyButton : public wxButton {
@@ -50,4 +57,13 @@ class MyButton : public wxButton {
 
  private:
   ButtonColor color_ = ButtonColor::Grey;
+};
+
+class WordEngine {
+ public:
+  WordEngine();
+  std::string GetWord(std::multiset<std::string>&, std::multiset<std::string>&);
+
+ private:
+  std::vector<std::string> wordBag_;
 };
