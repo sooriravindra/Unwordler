@@ -1,10 +1,23 @@
 #include <random>
-
+#include <fstream>
 #include "app.h"
 
+std::vector<std::string> WordEngine::InitWordBag(){
+    std::vector<std::string> v;
+    std::ifstream wordsFile("../res/words.txt");
+    std::string line;
+    if (wordsFile.is_open()) {
+       while(getline(wordsFile, line)) {
+           v.push_back(line);
+       }
+    }
+    else {
+        std::cout << "Failed to open words file" << std::endl;
+    }
+    return v;
+}
 WordEngine::WordEngine() {
-  wordBag_ = {"Hello", "World", "These", "Paper", "Nancy", "Still",
-              "Layer", "piper", "smile", "nouns", "blind"};
+  wordBag_ = std::move(WordEngine::InitWordBag());
   possibleWords_ = wordBag_;
 }
 

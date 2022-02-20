@@ -70,6 +70,7 @@ class WordEngine {
   std::string GetWord(std::vector<char> &, std::vector<char> &);
 
  private:
+  std::vector<std::string> InitWordBag();
   std::vector<std::string> wordBag_;
   std::vector<std::string> possibleWords_;
 };
