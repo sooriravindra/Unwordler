@@ -5,7 +5,7 @@ file(GLOB src_files src/*.cpp)
 file(GLOB header_files src/include/*.h)
 
 add_custom_target(format COMMAND /usr/bin/clang-format 
-                    -style=Google -i ${src_files} ${header_files})
+    -style=Google -i ${src_files} ${header_files})
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 

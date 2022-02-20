@@ -33,8 +33,14 @@ void MyFrame::InitMenubar() {
 
 MyFrame::MyFrame()
     : wxFrame(NULL, wxID_ANY, "Unwordler", wxDefaultPosition, wxSize(400, 300)),
-      grid_{std::make_unique<MyGrid>(this, 5, 5)} {
-  MyFrame::InitMenubar();
+      grid_{std::make_unique<MyGrid>(this, 5, 5)},
+      spinner_{std::make_unique<wxActivityIndicator>(this)} {
+  spinner_->Centre();
+  spinner_->Start();
+  InitMenubar();
+  spinner_->Stop();
+  spinner_->Show(false);
+  grid_->Show(true);
 }
 
 void MyFrame::OnExit(wxCommandEvent &event) { Close(true); }
@@ -45,5 +51,6 @@ void MyFrame::OnAbout(wxCommandEvent &event) {
 }
 
 void MyFrame::OnNew(wxCommandEvent &event) {
-  wxLogMessage("Starting new solver");
+  grid_->Reset();
+  grid_->Show(true);
 }

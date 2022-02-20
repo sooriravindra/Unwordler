@@ -2,7 +2,7 @@
 
 enum { ID_GO_BUTTON = 999 };
 
-MyGrid::MyGrid(MyFrame* F, uint32_t rows, uint32_t columns)
+MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
     : frame_{F},
       rows_{rows},
       columns_{columns},
@@ -10,28 +10,30 @@ MyGrid::MyGrid(MyFrame* F, uint32_t rows, uint32_t columns)
   for (auto j = 0; j < rows_; j++) {
     for (auto i = 0; i < columns_; i++) {
       auto btn = new MyButton(frame_, i, _T(" "), wxPoint(80 * i, 40 * j));
-      gridButtons_.push_back(btn);
+      btn->Show(false);
       btn->Enable(false);
+      gridButtons_.push_back(btn);
     }
   }
 
   goButton_ = new wxButton(frame_, ID_GO_BUTTON, _T("Go!"),
                            wxPoint(40 * (columns_ - 1), 40 * rows_ + 20));
+  goButton_->Show(false);
   goButton_->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                   wxCommandEventHandler(MyGrid::GoClick), this);
 }
 
 MyGrid::~MyGrid() { std::cout << "MyGrid destructor called " << std::endl; }
 
-void MyGrid::GoClick(wxCommandEvent& ev) {
-  std::multiset<std::string> m;
+void MyGrid::GoClick(wxCommandEvent &ev) {
+  std::vector<char> m;
   DisableRow(curr_row_++);
   auto ret = SetRow(curr_row_, wordEngine_->GetWord(m, m));
   if (ret && curr_row_ == rows_ - 1) goButton_->Enable(false);
 }
 
 bool MyGrid::DisableRow(int row) {
-  if (row < 0 || row > rows_) {
+  if (row < 0 || row >= rows_) {
     std::cout << "Can't disable row beyond range" << std::endl;
     return false;
   }
@@ -40,6 +42,16 @@ bool MyGrid::DisableRow(int row) {
     b->Enable(false);
   }
   return true;
+}
+
+void MyGrid::Reset() {
+  for (auto b : gridButtons_) {
+    b->SetLabel(" ");
+    b->Enable(false);
+  }
+  goButton_->Enable(true);
+  curr_row_ = -1;
+  wordEngine_->Reset();
 }
 
 bool MyGrid::SetRow(int srow, std::string s) {
@@ -70,5 +82,6 @@ bool MyGrid::SetRow(int srow, std::string s) {
 
 void MyGrid::Show(bool show) {
   std::cout << "Show " << show << std::endl;
-  for (auto x : gridButtons_) show ? x->Show() : x->Hide();
+  for (auto x : gridButtons_) x->Show(show);
+  goButton_->Show(show);
 }
