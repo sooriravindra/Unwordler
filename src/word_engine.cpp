@@ -36,20 +36,23 @@ std::string WordEngine::GetWord(
     std::vector<std::pair<char, uint32_t>> &green_letters) {
   bool found = false;
   std::string s;
-  std::list<std::string>::iterator it = possibleWords_.begin();
+  auto it = possibleWords_.begin();
   while (!found) {
     found = true;
     /* it = GetRandWordIterator(); */
     it = GetLikelyWordIterator();
-    if (it == possibleWords_.end()) return "";
+    if (it == possibleWords_.end()) {
+      return "";
+    }
     s = *it;
     for (auto c : grey_letters) {
       auto lambda = [&c](std::pair<char, uint32_t> p) { return p.first == c; };
       if ((std::find_if(amber_letters.begin(), amber_letters.end(), lambda) !=
            amber_letters.end()) ||
           std::find_if(green_letters.begin(), green_letters.end(), lambda) !=
-              green_letters.end())
+              green_letters.end()) {
         continue;
+      }
       if (std::count(s.begin(), s.end(), c) != 0) {
         std::string msg = "Grey letters";
         msg += c;
@@ -58,7 +61,9 @@ std::string WordEngine::GetWord(
         break;
       }
     }
-    if (!found) continue;
+    if (!found) {
+      continue;
+    }
 
     for (auto c : amber_letters) {
       if (std::count(s.begin(), s.end(), c.first) == 0) {
@@ -72,7 +77,9 @@ std::string WordEngine::GetWord(
         break;
       }
     }
-    if (!found) continue;
+    if (!found) {
+      continue;
+    }
 
     for (auto c : green_letters) {
       if (s.at(c.second) != c.first) {

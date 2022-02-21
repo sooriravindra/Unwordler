@@ -3,6 +3,10 @@
 #include "grid.h"
 
 enum { ID_New = 1 };
+const auto WindowWidth = 420;
+const auto WindowHeight = 350;
+const auto GridRows = 6;
+const auto GridColumns = 5;
 
 wxIMPLEMENT_APP(UnwordlerApp);
 
@@ -14,15 +18,15 @@ bool UnwordlerApp::OnInit() {
 
 void MyFrame::InitMenubar() {
   // File item
-  wxMenu *menuItemFile = new wxMenu;
+  auto *menuItemFile = new wxMenu;
   menuItemFile->Append(ID_New, "&New...\tCtrl-N", "New Wordle solver");
   menuItemFile->AppendSeparator();
   menuItemFile->Append(wxID_EXIT);
 
   // Help item
-  wxMenu *menuItemHelp = new wxMenu;
+  auto *menuItemHelp = new wxMenu;
   menuItemHelp->Append(wxID_ABOUT);
-  wxMenuBar *menuBar = new wxMenuBar;
+  auto *menuBar = new wxMenuBar;
 
   menuBar->Append(menuItemFile, "&File");
   menuBar->Append(menuItemHelp, "&Help");
@@ -34,8 +38,9 @@ void MyFrame::InitMenubar() {
 }
 
 MyFrame::MyFrame()
-    : wxFrame(NULL, wxID_ANY, "Unwordler", wxDefaultPosition, wxSize(420, 350)),
-      grid_{std::make_unique<MyGrid>(this, 6, 5)},
+    : wxFrame(nullptr, wxID_ANY, "Unwordler", wxDefaultPosition,
+              wxSize(WindowWidth, WindowHeight)),
+      grid_{std::make_unique<MyGrid>(this, GridRows, GridColumns)},
       spinner_{std::make_unique<wxActivityIndicator>(this)} {
   spinner_->Centre();
   spinner_->Start();

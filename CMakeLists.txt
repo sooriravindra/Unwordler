@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 project(UNWORDLER)
 
 file(GLOB src_files src/*.cpp)
@@ -8,6 +8,8 @@ add_custom_target(format COMMAND /usr/bin/clang-format
     -style=Google -i ${src_files} ${header_files})
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+set(CMAKE_CXX_STANDARD 14)
 
 execute_process(COMMAND wx-config --cxxflags OUTPUT_VARIABLE UW_CXX_FLAGS)
 

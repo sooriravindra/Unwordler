@@ -5,6 +5,9 @@
 #include "word_engine.h"
 
 enum { ID_GO_BUTTON = 999 };
+const auto ButtonHeight = 42;
+const auto ButtonWidth = 84;
+const auto ButtonBuffer = 20;
 
 MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
     : frame_{F},
@@ -13,7 +16,8 @@ MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
       wordEngine_{std::make_unique<WordEngine>()} {
   for (auto j = 0; j < rows_; j++) {
     for (auto i = 0; i < columns_; i++) {
-      auto btn = new MyButton(frame_, i, wxPoint(84 * i, 42 * j));
+      auto *btn =
+          new MyButton(frame_, i, wxPoint(ButtonWidth * i, ButtonHeight * j));
       btn->Show(false);
       btn->Disable();
       gridButtons_.push_back(btn);
@@ -21,7 +25,8 @@ MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
   }
 
   goButton_ = new wxButton(frame_, ID_GO_BUTTON, _T("Go!"),
-                           wxPoint(42 * (columns_ - 1), 42 * rows_ + 20));
+                           wxPoint(ButtonWidth / 2 * (columns_ - 1),
+                                   ButtonHeight * rows_ + ButtonBuffer));
   goButton_->Show(false);
   goButton_->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                   wxCommandEventHandler(MyGrid::GoClick), this);
@@ -34,15 +39,15 @@ void MyGrid::PopulateLetterColors(
     std::vector<std::pair<char, uint32_t>> &amber_letters,
     std::vector<std::pair<char, uint32_t>> &green_letters) {
   for (int i = 0; i < (curr_row_)*columns_; i++) {
-    auto b = gridButtons_[i];
+    auto *b = gridButtons_[i];
     switch (b->GetCurrentColor()) {
       case ButtonColor::Amber:
         amber_letters.push_back(
-            std::make_pair<char, uint32_t>(b->GetLabel()[0], i % columns_));
+            std::pair<char, uint32_t>(b->GetLabel()[0], i % columns_));
         break;
       case ButtonColor::Green:
         green_letters.push_back(
-            std::make_pair<char, uint32_t>(b->GetLabel()[0], i % columns_));
+            std::pair<char, uint32_t>(b->GetLabel()[0], i % columns_));
         break;
       case ButtonColor::Grey:
         grey_letters.push_back(b->GetLabel()[0]);
@@ -68,7 +73,9 @@ void MyGrid::GoClick(wxCommandEvent &ev) {
     return;
   }
 
-  if (curr_row_ != 0) DisableRow(curr_row_ - 1);
+  if (curr_row_ != 0) {
+    DisableRow(curr_row_ - 1);
+  }
 
   // Get a new word from the engine
   const auto word =
@@ -102,7 +109,7 @@ bool MyGrid::DisableRow(int row) {
 }
 
 void MyGrid::Reset() {
-  for (auto b : gridButtons_) {
+  for (auto *b : gridButtons_) {
     b->Reset();
   }
   goButton_->Enable(true);
@@ -131,7 +138,7 @@ bool MyGrid::SetRow(
 
   // Set button label and enable button
   for (auto i = 0; i < s.length(); i++) {
-    auto b = gridButtons_[i + srow * columns_];
+    auto *b = gridButtons_[i + srow * columns_];
     auto str = std::string(1, s.at(i));
     b->SetLabel(str);
     b->Enable(true);
@@ -149,13 +156,17 @@ bool MyGrid::SetRow(
 }
 
 void MyGrid::Show(bool show) {
-  for (auto x : gridButtons_) x->Show(show);
+  for (auto *x : gridButtons_) {
+    x->Show(show);
+  }
   goButton_->Show(show);
 }
 
 bool MyGrid::IsVictorious() {
   bool is_all_green = true;
-  if (curr_row_ == 0) return false;
+  if (curr_row_ == 0) {
+    return false;
+  }
 
   // Find if all blocks in the previous row is green
   for (int i = (curr_row_ - 1) * columns_; i < curr_row_ * columns_; i++) {

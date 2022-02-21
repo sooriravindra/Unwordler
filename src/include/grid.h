@@ -24,8 +24,7 @@ class MyGrid : public wxEvtHandler {
   uint32_t curr_row_{0};
   std::unique_ptr<WordEngine> wordEngine_;
   bool DisableRow(int row);
-  bool SetRow(int, const std::string,
-              const std::vector<std::pair<char, uint32_t>> &);
+  bool SetRow(int, std::string, const std::vector<std::pair<char, uint32_t>> &);
   bool IsVictorious();
   void PopulateLetterColors(
       std::vector<char> &grey_letters,
