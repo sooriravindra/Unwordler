@@ -25,10 +25,10 @@ MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
 
 MyGrid::~MyGrid() { std::cout << "Destroying Grid!" << std::endl; }
 
-void MyGrid::GoClick(wxCommandEvent &ev) {
-  std::vector<char> grey_letters;
-  std::vector<std::pair<char, uint32_t>> amber_letters;
-  std::vector<std::pair<char, uint32_t>> green_letters;
+void MyGrid::PopulateLetterColors(
+    std::vector<char> &grey_letters,
+    std::vector<std::pair<char, uint32_t>> &amber_letters,
+    std::vector<std::pair<char, uint32_t>> &green_letters) {
   for (int i = 0; i < (curr_row_)*columns_; i++) {
     auto b = gridButtons_[i];
     switch (b->GetCurrentColor()) {
@@ -48,7 +48,24 @@ void MyGrid::GoClick(wxCommandEvent &ev) {
         break;
     }
   }
-  DisableRow(curr_row_ - 1);
+}
+
+void MyGrid::GoClick(wxCommandEvent &ev) {
+  std::vector<char> grey_letters;
+  std::vector<std::pair<char, uint32_t>> amber_letters;
+  std::vector<std::pair<char, uint32_t>> green_letters;
+
+  PopulateLetterColors(grey_letters, amber_letters, green_letters);
+
+  if (IsVictorious()) {
+    wxMessageBox("Ah! The sweet taste of victory!", "Unwordler", wxOK);
+    goButton_->Enable(false);
+    return;
+  }
+
+  if (curr_row_ != 0) DisableRow(curr_row_ - 1);
+
+  // Get a new word from the engine
   const auto word =
       wordEngine_->GetWord(grey_letters, amber_letters, green_letters);
   if (word.empty()) {
@@ -56,6 +73,8 @@ void MyGrid::GoClick(wxCommandEvent &ev) {
     goButton_->Enable(false);
     return;
   }
+
+  // Set the row to the word that was fetched
   bool ret = SetRow(curr_row_, word, green_letters);
   if (ret) {
     if (curr_row_ < rows_ - 1) {
@@ -87,7 +106,9 @@ void MyGrid::Reset() {
   wordEngine_->Reset();
 }
 
-bool MyGrid::SetRow(int srow, const std::string s, const std::vector<std::pair<char,uint32_t>> & green_letters) {
+bool MyGrid::SetRow(
+    int srow, const std::string s,
+    const std::vector<std::pair<char, uint32_t>> &green_letters) {
   if (s.length() == 0 || s.length() != columns_) {
     std::cout << "Word length doesn't match with number of columns : " << s
               << std::endl;
@@ -111,18 +132,33 @@ bool MyGrid::SetRow(int srow, const std::string s, const std::vector<std::pair<c
     b->SetLabel(str);
     b->Enable(true);
     auto columns = columns_;
-    auto lambda = [i,columns](const std::pair<char,uint32_t> p) { return (p.second % columns == i); };
-    if(std::find_if(green_letters.begin(), green_letters.end(), lambda) != green_letters.end()) {
-        b->SetColor(ButtonColor::Green);
+    auto lambda = [i, columns](const std::pair<char, uint32_t> p) {
+      return (p.second % columns == i);
+    };
+    if (std::find_if(green_letters.begin(), green_letters.end(), lambda) !=
+        green_letters.end()) {
+      b->SetColor(ButtonColor::Green);
     }
   }
-
 
   return true;
 }
 
 void MyGrid::Show(bool show) {
-  std::cout << "Show " << show << std::endl;
   for (auto x : gridButtons_) x->Show(show);
   goButton_->Show(show);
+}
+
+bool MyGrid::IsVictorious() {
+  bool is_all_green = true;
+  if (curr_row_ == 0) return false;
+
+  // Find if all blocks in the previous row is green
+  for (int i = (curr_row_ - 1) * columns_; i < curr_row_ * columns_; i++) {
+    if (i < 0 || gridButtons_[i]->GetCurrentColor() != ButtonColor::Green) {
+      is_all_green = false;
+      break;
+    }
+  }
+  return is_all_green;
 }
