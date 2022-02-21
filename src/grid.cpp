@@ -1,4 +1,8 @@
+#include "grid.h"
+
 #include "app.h"
+#include "button.h"
+#include "word_engine.h"
 
 enum { ID_GO_BUTTON = 999 };
 

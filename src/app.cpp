@@ -1,5 +1,7 @@
 #include "app.h"
 
+#include "grid.h"
+
 enum { ID_New = 1 };
 
 wxIMPLEMENT_APP(UnwordlerApp);

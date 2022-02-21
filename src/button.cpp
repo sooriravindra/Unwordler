@@ -1,4 +1,9 @@
-#include "app.h"
+#include <wx/wxprec.h>
+
+#ifndef WX_PRECOMP
+#include <wx/wx.h>
+#endif
+#include "button.h"
 
 MyButton::MyButton(wxWindow *parent, wxWindowID id, const wxPoint &pos)
     : wxButton(parent, id, _T(" "), pos) {

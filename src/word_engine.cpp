@@ -1,9 +1,12 @@
+#include "word_engine.h"
+
+#include <algorithm>
 #include <fstream>
+#include <iostream>
 #include <random>
 #include <stdexcept>
 
 #include "word_bag.h"
-#include "app.h"
 
 std::list<std::string> WordEngine::ReadWordBagFromFile(std::string file_name) {
   std::list<std::string> s;
@@ -19,7 +22,8 @@ std::list<std::string> WordEngine::ReadWordBagFromFile(std::string file_name) {
   return s;
 }
 WordEngine::WordEngine() {
-  /* wordBag_ = std::move(WordEngine::ReadWordBagFromFile("../res/words.txt")); */
+  /* wordBag_ = std::move(WordEngine::ReadWordBagFromFile("../res/words.txt"));
+   */
   wordBag_ = gWordList;
   possibleWords_ = wordBag_;
 }
