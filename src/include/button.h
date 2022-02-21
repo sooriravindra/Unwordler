@@ -1,5 +1,11 @@
 #pragma once
 
+#include <wx/wxprec.h>
+
+#ifndef WX_PRECOMP
+#include <wx/wx.h>
+#endif
+
 enum class ButtonColor { Green, Amber, Grey };
 
 class MyButton : public wxButton {

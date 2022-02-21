@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "app.h"
 #include "button.h"
 #include "word_engine.h"
 

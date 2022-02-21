@@ -15,7 +15,7 @@ MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
     for (auto i = 0; i < columns_; i++) {
       auto btn = new MyButton(frame_, i, wxPoint(84 * i, 42 * j));
       btn->Show(false);
-      btn->Enable(false);
+      btn->Disable();
       gridButtons_.push_back(btn);
     }
   }
