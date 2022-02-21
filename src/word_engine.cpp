@@ -30,71 +30,76 @@ WordEngine::WordEngine() {
 
 void WordEngine::Reset() { possibleWords_ = wordBag_; }
 
+bool PruneUsingGreyLettters(
+    const std::string &s, const std::vector<char> &grey_letters,
+    const std::vector<std::pair<char, uint32_t>> &amber_letters,
+    const std::vector<std::pair<char, uint32_t>> &green_letters) {
+  for (auto c : grey_letters) {
+    auto lambda = [&c](std::pair<char, uint32_t> p) { return p.first == c; };
+
+    if ((std::find_if(amber_letters.begin(), amber_letters.end(), lambda) !=
+         amber_letters.end()) ||
+        std::find_if(green_letters.begin(), green_letters.end(), lambda) !=
+            green_letters.end()) {
+      continue;
+    }
+    if (std::count(s.begin(), s.end(), c) != 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool PruneUsingAmberLetters(
+    const std::string &s,
+    const std::vector<std::pair<char, uint32_t>> &amber_letters) {
+  return std::any_of(amber_letters.begin(), amber_letters.end(), [&s](auto c) {
+    return ((s.at(c.second) == c.first) ||
+            (std::count(s.begin(), s.end(), c.first) == 0));
+  });
+}
+
+bool PruneUsingGreenLetters(
+    const std::string &s,
+    const std::vector<std::pair<char, uint32_t>> &green_letters) {
+  return std::any_of(green_letters.begin(), green_letters.end(),
+                     [&s](auto c) { return (s.at(c.second) != c.first); });
+}
+
 std::string WordEngine::GetWord(
-    std::vector<char> &grey_letters,
-    std::vector<std::pair<char, uint32_t>> &amber_letters,
-    std::vector<std::pair<char, uint32_t>> &green_letters) {
-  bool found = false;
+    const std::vector<char> &grey_letters,
+    const std::vector<std::pair<char, uint32_t>> &amber_letters,
+    const std::vector<std::pair<char, uint32_t>> &green_letters) {
   std::string s;
   auto it = possibleWords_.begin();
-  while (!found) {
-    found = true;
+  while (true) {
     /* it = GetRandWordIterator(); */
     it = GetLikelyWordIterator();
     if (it == possibleWords_.end()) {
       return "";
     }
     s = *it;
-    for (auto c : grey_letters) {
-      auto lambda = [&c](std::pair<char, uint32_t> p) { return p.first == c; };
-      if ((std::find_if(amber_letters.begin(), amber_letters.end(), lambda) !=
-           amber_letters.end()) ||
-          std::find_if(green_letters.begin(), green_letters.end(), lambda) !=
-              green_letters.end()) {
-        continue;
-      }
-      if (std::count(s.begin(), s.end(), c) != 0) {
-        std::string msg = "Grey letters";
-        msg += c;
-        RemoveWord(it, msg);
-        found = false;
-        break;
-      }
-    }
-    if (!found) {
+    if (PruneUsingGreyLettters(s, grey_letters, amber_letters, green_letters)) {
+      RemoveWord(it);
       continue;
     }
 
-    for (auto c : amber_letters) {
-      if (std::count(s.begin(), s.end(), c.first) == 0) {
-        RemoveWord(it, "Amber letters");
-        found = false;
-        break;
-      }
-      if (s.at(c.second) == c.first) {
-        RemoveWord(it, "Amber letters position");
-        found = false;
-        break;
-      }
-    }
-    if (!found) {
+    if (PruneUsingAmberLetters(s, amber_letters)) {
+      RemoveWord(it);
       continue;
     }
 
-    for (auto c : green_letters) {
-      if (s.at(c.second) != c.first) {
-        RemoveWord(it, "Green letters");
-        found = false;
-        break;
-      }
+    if (PruneUsingGreenLetters(s, green_letters)) {
+      RemoveWord(it);
+      continue;
     }
+    break;
   }
-  RemoveWord(it, "Chosen word");
+  RemoveWord(it);
   return s;
 }
 
-void WordEngine::RemoveWord(std::list<std::string>::iterator it,
-                            std::string reason) {
+void WordEngine::RemoveWord(std::list<std::string>::iterator it) {
   possibleWords_.erase(it);
 }
 
