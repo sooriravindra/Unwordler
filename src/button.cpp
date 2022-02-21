@@ -9,16 +9,13 @@ MyButton::MyButton(wxWindow *parent, wxWindowID id, const wxPoint &pos)
 void MyButton::ToggleColor(wxCommandEvent &ev) {
   switch (color_) {
     case ButtonColor::Grey:
-      SetBackgroundColour(wxColor(235, 205, 61));  // Amber
-      color_ = ButtonColor::Amber;
+      SetColor(ButtonColor::Amber);
       break;
     case ButtonColor::Amber:
-      SetBackgroundColour(wxColor(36, 163, 34));  // Green
-      color_ = ButtonColor::Green;
+      SetColor(ButtonColor::Green);
       break;
     case ButtonColor::Green:
-      SetBackgroundColour(wxNullColour);  // Grey
-      color_ = ButtonColor::Grey;
+      SetColor(ButtonColor::Grey);
       break;
   }
 }
@@ -30,4 +27,21 @@ void MyButton::Reset() {
   Enable(false);
   SetBackgroundColour(wxNullColour);
   color_ = ButtonColor::Grey;
+}
+
+void MyButton::SetColor(ButtonColor color) {
+  switch (color) {
+    case ButtonColor::Amber:
+      SetBackgroundColour(wxColor(235, 205, 61));  // Amber
+      color_ = ButtonColor::Amber;
+      break;
+    case ButtonColor::Green:
+      SetBackgroundColour(wxColor(36, 163, 34));  // Green
+      color_ = ButtonColor::Green;
+      break;
+    case ButtonColor::Grey:
+      SetBackgroundColour(wxNullColour);  // Grey
+      color_ = ButtonColor::Grey;
+      break;
+  }
 }

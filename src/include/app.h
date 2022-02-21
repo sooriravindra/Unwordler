@@ -50,7 +50,7 @@ class MyGrid : public wxEvtHandler {
   uint32_t columns_;
   uint32_t curr_row_{0};
   bool DisableRow(int row);
-  bool SetRow(int, const std::string);
+  bool SetRow(int, const std::string, const std::vector<std::pair<char, uint32_t>> &);
   std::unique_ptr<WordEngine> wordEngine_;
 };
 
@@ -59,6 +59,7 @@ class MyButton : public wxButton {
   MyButton(wxWindow *parent, wxWindowID id, const wxPoint &pos);
   void ToggleColor(wxCommandEvent &ev);
   ButtonColor GetCurrentColor();
+  void SetColor(ButtonColor color);
   void Reset();
 
  private:

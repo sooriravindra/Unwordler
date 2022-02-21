@@ -56,7 +56,7 @@ void MyGrid::GoClick(wxCommandEvent &ev) {
     goButton_->Enable(false);
     return;
   }
-  bool ret = SetRow(curr_row_, word);
+  bool ret = SetRow(curr_row_, word, green_letters);
   if (ret) {
     if (curr_row_ < rows_ - 1) {
       curr_row_++;
@@ -87,7 +87,7 @@ void MyGrid::Reset() {
   wordEngine_->Reset();
 }
 
-bool MyGrid::SetRow(int srow, const std::string s) {
+bool MyGrid::SetRow(int srow, const std::string s, const std::vector<std::pair<char,uint32_t>> & green_letters) {
   if (s.length() == 0 || s.length() != columns_) {
     std::cout << "Word length doesn't match with number of columns : " << s
               << std::endl;
@@ -110,7 +110,13 @@ bool MyGrid::SetRow(int srow, const std::string s) {
     auto str = std::string(1, s.at(i));
     b->SetLabel(str);
     b->Enable(true);
+    auto columns = columns_;
+    auto lambda = [i,columns](const std::pair<char,uint32_t> p) { return (p.second % columns == i); };
+    if(std::find_if(green_letters.begin(), green_letters.end(), lambda) != green_letters.end()) {
+        b->SetColor(ButtonColor::Green);
+    }
   }
+
 
   return true;
 }
