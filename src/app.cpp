@@ -32,8 +32,8 @@ void MyFrame::InitMenubar() {
 }
 
 MyFrame::MyFrame()
-    : wxFrame(NULL, wxID_ANY, "Unwordler", wxDefaultPosition, wxSize(400, 300)),
-      grid_{std::make_unique<MyGrid>(this, 5, 5)},
+    : wxFrame(NULL, wxID_ANY, "Unwordler", wxDefaultPosition, wxSize(400, 350)),
+      grid_{std::make_unique<MyGrid>(this, 6, 5)},
       spinner_{std::make_unique<wxActivityIndicator>(this)} {
   spinner_->Centre();
   spinner_->Start();
@@ -46,7 +46,7 @@ MyFrame::MyFrame()
 void MyFrame::OnExit(wxCommandEvent &event) { Close(true); }
 
 void MyFrame::OnAbout(wxCommandEvent &event) {
-  wxMessageBox("This is a Wordle solver app", "About Unwordler",
+  wxMessageBox("Wordle solver app by Raveendra Soori", "About Unwordler",
                wxOK | wxICON_INFORMATION);
 }
 

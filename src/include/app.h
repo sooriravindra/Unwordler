@@ -7,8 +7,8 @@
 #include <wx/activityindicator.h>
 
 #include <algorithm>
+#include <list>
 #include <memory>
-#include <set>
 
 enum class ButtonColor { Green, Amber, Grey };
 
@@ -50,7 +50,7 @@ class MyGrid : public wxEvtHandler {
   uint32_t columns_;
   uint32_t curr_row_{0};
   bool DisableRow(int row);
-  bool SetRow(int, std::string);
+  bool SetRow(int, const std::string);
   std::unique_ptr<WordEngine> wordEngine_;
 };
 
@@ -69,13 +69,16 @@ class WordEngine {
  public:
   WordEngine();
   void Reset();
-  std::string GetWord(std::vector<char> &, std::vector<char> &,
+  std::string GetWord(std::vector<char> &,
+                      std::vector<std::pair<char, uint32_t>> &,
                       std::vector<std::pair<char, uint32_t>> &);
-  std::set<std::string>::iterator GetRandWordIterator();
+  std::list<std::string>::iterator GetRandWordIterator();
+  std::list<std::string>::iterator GetLikelyWordIterator();
   int GetRandom(uint32_t size);
+  void RemoveWord(std::list<std::string>::iterator it, std::string);
 
  private:
-  std::set<std::string> InitWordBag();
-  std::set<std::string> wordBag_;
-  std::set<std::string> possibleWords_;
+  std::list<std::string> InitWordBag();
+  std::list<std::string> wordBag_;
+  std::list<std::string> possibleWords_;
 };

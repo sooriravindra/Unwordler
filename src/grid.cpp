@@ -26,14 +26,15 @@ MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
 MyGrid::~MyGrid() { std::cout << "Destroying Grid!" << std::endl; }
 
 void MyGrid::GoClick(wxCommandEvent &ev) {
-  std::vector<char> amber_letters;
   std::vector<char> grey_letters;
+  std::vector<std::pair<char, uint32_t>> amber_letters;
   std::vector<std::pair<char, uint32_t>> green_letters;
   for (int i = 0; i < (curr_row_)*columns_; i++) {
     auto b = gridButtons_[i];
     switch (b->GetCurrentColor()) {
       case ButtonColor::Amber:
-        amber_letters.push_back(b->GetLabel()[0]);
+        amber_letters.push_back(
+            std::make_pair<char, uint32_t>(b->GetLabel()[0], i % columns_));
         break;
       case ButtonColor::Green:
         green_letters.push_back(
@@ -48,8 +49,14 @@ void MyGrid::GoClick(wxCommandEvent &ev) {
     }
   }
   DisableRow(curr_row_ - 1);
-  auto ret = SetRow(curr_row_, wordEngine_->GetWord(grey_letters, amber_letters,
-                                                    green_letters));
+  const auto word =
+      wordEngine_->GetWord(grey_letters, amber_letters, green_letters);
+  if (word.empty()) {
+    wxMessageBox("Oops! Out of words :/", "Unwordler", wxOK);
+    goButton_->Enable(false);
+    return;
+  }
+  bool ret = SetRow(curr_row_, word);
   if (ret) {
     if (curr_row_ < rows_ - 1) {
       curr_row_++;
@@ -80,7 +87,7 @@ void MyGrid::Reset() {
   wordEngine_->Reset();
 }
 
-bool MyGrid::SetRow(int srow, std::string s) {
+bool MyGrid::SetRow(int srow, const std::string s) {
   if (s.length() == 0 || s.length() != columns_) {
     std::cout << "Word length doesn't match with number of columns : " << s
               << std::endl;
@@ -92,8 +99,10 @@ bool MyGrid::SetRow(int srow, std::string s) {
     return false;
   }
 
-  // Set to uppercase for consistency
-  std::transform(s.begin(), s.end(), s.begin(), ::toupper);
+  /* Set to uppercase for consistency?
+   * Not needed as the wordlist is in uppercase
+   */
+  /* std::transform(s.begin(), s.end(), s.begin(), ::toupper); */
 
   // Set button label and enable button
   for (auto i = 0; i < s.length(); i++) {
