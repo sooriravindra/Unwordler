@@ -9,7 +9,7 @@ MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
       wordEngine_{std::make_unique<WordEngine>()} {
   for (auto j = 0; j < rows_; j++) {
     for (auto i = 0; i < columns_; i++) {
-      auto btn = new MyButton(frame_, i, wxPoint(80 * i, 40 * j));
+      auto btn = new MyButton(frame_, i, wxPoint(84 * i, 42 * j));
       btn->Show(false);
       btn->Enable(false);
       gridButtons_.push_back(btn);
@@ -17,7 +17,7 @@ MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
   }
 
   goButton_ = new wxButton(frame_, ID_GO_BUTTON, _T("Go!"),
-                           wxPoint(40 * (columns_ - 1), 40 * rows_ + 20));
+                           wxPoint(42 * (columns_ - 1), 42 * rows_ + 20));
   goButton_->Show(false);
   goButton_->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                   wxCommandEventHandler(MyGrid::GoClick), this);
@@ -58,7 +58,8 @@ void MyGrid::GoClick(wxCommandEvent &ev) {
   PopulateLetterColors(grey_letters, amber_letters, green_letters);
 
   if (IsVictorious()) {
-    wxMessageBox("Ah! The sweet taste of victory!", "Unwordler", wxOK);
+    wxMessageBox("Ah! The sweet taste of victory!", "Unwordler",
+                 wxOK | wxICON_MASK);
     goButton_->Enable(false);
     return;
   }
@@ -91,8 +92,7 @@ bool MyGrid::DisableRow(int row) {
     return false;
   }
   for (auto i = columns_ * row; i < columns_ * (row + 1); i++) {
-    auto b = gridButtons_[i];
-    b->Enable(false);
+    gridButtons_[i]->Disable();
   }
   return true;
 }

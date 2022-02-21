@@ -2,11 +2,12 @@
 #include <random>
 #include <stdexcept>
 
+#include "word_bag.h"
 #include "app.h"
 
-std::list<std::string> WordEngine::InitWordBag() {
+std::list<std::string> WordEngine::ReadWordBagFromFile(std::string file_name) {
   std::list<std::string> s;
-  std::ifstream wordsFile("../res/words.txt");
+  std::ifstream wordsFile(file_name);
   std::string line;
   if (wordsFile.is_open()) {
     while (getline(wordsFile, line)) {
@@ -18,7 +19,8 @@ std::list<std::string> WordEngine::InitWordBag() {
   return s;
 }
 WordEngine::WordEngine() {
-  wordBag_ = std::move(WordEngine::InitWordBag());
+  /* wordBag_ = std::move(WordEngine::ReadWordBagFromFile("../res/words.txt")); */
+  wordBag_ = gWordList;
   possibleWords_ = wordBag_;
 }
 
@@ -82,8 +84,6 @@ std::string WordEngine::GetWord(
 
 void WordEngine::RemoveWord(std::list<std::string>::iterator it,
                             std::string reason) {
-  /* std::cout << "Removing : " << *it << ", Because found in " << reason */
-  /*           << std::endl; */
   possibleWords_.erase(it);
 }
 
@@ -98,7 +98,7 @@ std::list<std::string>::iterator WordEngine::GetRandWordIterator() {
   auto it = possibleWords_.begin();
   auto sz = possibleWords_.size();
   if (sz == 0) {
-    std::cout << "possibleWords_ empty" << std::endl;
+    std::cout << "Out of words!!" << std::endl;
     return possibleWords_.end();
   }
   std::advance(it, GetRandom(possibleWords_.size()));
@@ -107,7 +107,7 @@ std::list<std::string>::iterator WordEngine::GetRandWordIterator() {
 
 std::list<std::string>::iterator WordEngine::GetLikelyWordIterator() {
   if (possibleWords_.empty()) {
-    std::cout << "possibleWords empty" << std::endl;
+    std::cout << "Out of words!!" << std::endl;
     return possibleWords_.end();
   }
   return possibleWords_.begin();

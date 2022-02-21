@@ -67,6 +67,7 @@ class MyButton : public wxButton {
   ButtonColor GetCurrentColor();
   void SetColor(ButtonColor color);
   void Reset();
+  void Disable();
 
  private:
   ButtonColor color_ = ButtonColor::Grey;
@@ -85,7 +86,7 @@ class WordEngine {
   void RemoveWord(std::list<std::string>::iterator it, std::string);
 
  private:
-  std::list<std::string> InitWordBag();
+  std::list<std::string> ReadWordBagFromFile(std::string);
   std::list<std::string> wordBag_;
   std::list<std::string> possibleWords_;
 };

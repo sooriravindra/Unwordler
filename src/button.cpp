@@ -45,3 +45,8 @@ void MyButton::SetColor(ButtonColor color) {
       break;
   }
 }
+
+void MyButton::Disable() {
+  Enable(false);
+  SetForegroundColour(wxColour(0, 0, 0));
+}

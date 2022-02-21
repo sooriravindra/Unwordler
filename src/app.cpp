@@ -32,7 +32,7 @@ void MyFrame::InitMenubar() {
 }
 
 MyFrame::MyFrame()
-    : wxFrame(NULL, wxID_ANY, "Unwordler", wxDefaultPosition, wxSize(400, 350)),
+    : wxFrame(NULL, wxID_ANY, "Unwordler", wxDefaultPosition, wxSize(420, 350)),
       grid_{std::make_unique<MyGrid>(this, 6, 5)},
       spinner_{std::make_unique<wxActivityIndicator>(this)} {
   spinner_->Centre();
