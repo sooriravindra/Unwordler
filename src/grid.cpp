@@ -9,7 +9,7 @@ MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
       wordEngine_{std::make_unique<WordEngine>()} {
   for (auto j = 0; j < rows_; j++) {
     for (auto i = 0; i < columns_; i++) {
-      auto btn = new MyButton(frame_, i, _T(" "), wxPoint(80 * i, 40 * j));
+      auto btn = new MyButton(frame_, i, wxPoint(80 * i, 40 * j));
       btn->Show(false);
       btn->Enable(false);
       gridButtons_.push_back(btn);
@@ -23,13 +23,40 @@ MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
                   wxCommandEventHandler(MyGrid::GoClick), this);
 }
 
-MyGrid::~MyGrid() { std::cout << "MyGrid destructor called " << std::endl; }
+MyGrid::~MyGrid() { std::cout << "Destroying Grid!" << std::endl; }
 
 void MyGrid::GoClick(wxCommandEvent &ev) {
-  std::vector<char> m;
-  DisableRow(curr_row_++);
-  auto ret = SetRow(curr_row_, wordEngine_->GetWord(m, m));
-  if (ret && curr_row_ == rows_ - 1) goButton_->Enable(false);
+  std::vector<char> amber_letters;
+  std::vector<char> grey_letters;
+  std::vector<std::pair<char, uint32_t>> green_letters;
+  for (int i = 0; i < (curr_row_)*columns_; i++) {
+    auto b = gridButtons_[i];
+    switch (b->GetCurrentColor()) {
+      case ButtonColor::Amber:
+        amber_letters.push_back(b->GetLabel()[0]);
+        break;
+      case ButtonColor::Green:
+        green_letters.push_back(
+            std::make_pair<char, uint32_t>(b->GetLabel()[0], i % columns_));
+        break;
+      case ButtonColor::Grey:
+        grey_letters.push_back(b->GetLabel()[0]);
+        break;
+      default:
+        // do nothing
+        break;
+    }
+  }
+  DisableRow(curr_row_ - 1);
+  auto ret = SetRow(curr_row_, wordEngine_->GetWord(grey_letters, amber_letters,
+                                                    green_letters));
+  if (ret) {
+    if (curr_row_ < rows_ - 1) {
+      curr_row_++;
+    } else {
+      goButton_->Enable(false);
+    }
+  }
 }
 
 bool MyGrid::DisableRow(int row) {
@@ -46,16 +73,15 @@ bool MyGrid::DisableRow(int row) {
 
 void MyGrid::Reset() {
   for (auto b : gridButtons_) {
-    b->SetLabel(" ");
-    b->Enable(false);
+    b->Reset();
   }
   goButton_->Enable(true);
-  curr_row_ = -1;
+  curr_row_ = 0;
   wordEngine_->Reset();
 }
 
 bool MyGrid::SetRow(int srow, std::string s) {
-  if (s.length() == 0 && s.length() != columns_) {
+  if (s.length() == 0 || s.length() != columns_) {
     std::cout << "Word length doesn't match with number of columns : " << s
               << std::endl;
     return false;

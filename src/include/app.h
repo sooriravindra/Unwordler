@@ -6,6 +6,7 @@
 
 #include <wx/activityindicator.h>
 
+#include <algorithm>
 #include <memory>
 #include <set>
 
@@ -47,7 +48,7 @@ class MyGrid : public wxEvtHandler {
   wxButton *goButton_;
   uint32_t rows_;
   uint32_t columns_;
-  int curr_row_{-1};
+  uint32_t curr_row_{0};
   bool DisableRow(int row);
   bool SetRow(int, std::string);
   std::unique_ptr<WordEngine> wordEngine_;
@@ -55,9 +56,10 @@ class MyGrid : public wxEvtHandler {
 
 class MyButton : public wxButton {
  public:
-  MyButton(wxWindow *parent, wxWindowID id, const wxString &label,
-           const wxPoint &pos);
+  MyButton(wxWindow *parent, wxWindowID id, const wxPoint &pos);
   void ToggleColor(wxCommandEvent &ev);
+  ButtonColor GetCurrentColor();
+  void Reset();
 
  private:
   ButtonColor color_ = ButtonColor::Grey;
@@ -67,10 +69,13 @@ class WordEngine {
  public:
   WordEngine();
   void Reset();
-  std::string GetWord(std::vector<char> &, std::vector<char> &);
+  std::string GetWord(std::vector<char> &, std::vector<char> &,
+                      std::vector<std::pair<char, uint32_t>> &);
+  std::set<std::string>::iterator GetRandWordIterator();
+  int GetRandom(uint32_t size);
 
  private:
-  std::vector<std::string> InitWordBag();
-  std::vector<std::string> wordBag_;
-  std::vector<std::string> possibleWords_;
+  std::set<std::string> InitWordBag();
+  std::set<std::string> wordBag_;
+  std::set<std::string> possibleWords_;
 };

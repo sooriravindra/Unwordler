@@ -1,8 +1,7 @@
 #include "app.h"
 
-MyButton::MyButton(wxWindow *parent, wxWindowID id, const wxString &label,
-                   const wxPoint &pos)
-    : wxButton(parent, id, label, pos) {
+MyButton::MyButton(wxWindow *parent, wxWindowID id, const wxPoint &pos)
+    : wxButton(parent, id, _T(" "), pos) {
   Connect(id, wxEVT_COMMAND_BUTTON_CLICKED,
           wxCommandEventHandler(MyButton::ToggleColor));
 }
@@ -22,4 +21,13 @@ void MyButton::ToggleColor(wxCommandEvent &ev) {
       color_ = ButtonColor::Grey;
       break;
   }
+}
+
+ButtonColor MyButton::GetCurrentColor() { return color_; }
+
+void MyButton::Reset() {
+  SetLabel(" ");
+  Enable(false);
+  SetBackgroundColour(wxNullColour);
+  color_ = ButtonColor::Grey;
 }
