@@ -4,8 +4,11 @@ project(UNWORDLER)
 file(GLOB src_files src/*.cpp)
 file(GLOB header_files src/include/*.h)
 
-add_custom_target(format COMMAND /usr/bin/clang-format 
+add_custom_target(format COMMAND clang-format 
     -style=Google -i ${src_files} ${header_files})
+
+add_custom_target(lint COMMAND clang-tidy -p=${CMAKE_BINARY_DIR} 
+    --checks=readability-*,google-* ${src_files} ${header_files})
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 

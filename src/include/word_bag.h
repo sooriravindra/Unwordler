@@ -3,7 +3,7 @@
 #include <list>
 #include <string>
 
-std::list<std::string> gWordList = {
+const std::list<std::string> gWordList = {
     "ABOUT", "OTHER", "WHICH", "THEIR", "THERE", "FIRST", "WOULD", "THESE",
     "CLICK", "PRICE", "STATE", "WORLD", "MUSIC", "AFTER", "VIDEO", "WHERE",
     "BOOKS", "LINKS", "YEARS", "ORDER", "ITEMS", "GROUP", "UNDER", "GAMES",
