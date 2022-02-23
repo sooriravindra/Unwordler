@@ -5,9 +5,8 @@
 #include "word_engine.h"
 
 enum { ID_GO_BUTTON = 999 };
-const auto ButtonHeight = 42;
-const auto ButtonWidth = 84;
-const auto ButtonBuffer = 20;
+const int ButtonLength = 80;
+const int ButtonBuffer = 20;
 
 MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
     : frame_{F},
@@ -17,7 +16,8 @@ MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
   for (auto j = 0; j < rows_; j++) {
     for (auto i = 0; i < columns_; i++) {
       auto *btn =
-          new MyButton(frame_, i, wxPoint(ButtonWidth * i, ButtonHeight * j));
+          new MyButton(frame_, i, wxPoint(ButtonLength * i, ButtonLength * j),
+                       wxSize(ButtonLength, ButtonLength));
       btn->Show(false);
       btn->Disable();
       gridButtons_.push_back(btn);
@@ -25,8 +25,8 @@ MyGrid::MyGrid(MyFrame *F, uint32_t rows, uint32_t columns)
   }
 
   goButton_ = new wxButton(frame_, ID_GO_BUTTON, _T("Go!"),
-                           wxPoint(ButtonWidth / 2 * (columns_ - 1),
-                                   ButtonHeight * rows_ + ButtonBuffer));
+                           wxPoint(ButtonLength / 2 * (columns_ - 1),
+                                   ButtonLength * rows_ + ButtonBuffer));
   goButton_->Show(false);
   goButton_->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
                   wxCommandEventHandler(MyGrid::GoClick), this);

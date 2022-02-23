@@ -3,10 +3,11 @@
 #include "grid.h"
 
 enum { ID_New = 1 };
-const auto WindowWidth = 420;
-const auto WindowHeight = 350;
 const auto GridRows = 6;
 const auto GridColumns = 5;
+const auto WindowWidth = GridColumns * ButtonLength;
+/* Grid size + Buffer below and above go button + height of go button */
+const auto WindowHeight = (GridRows + 1) * ButtonLength + 2 * ButtonBuffer;
 
 wxIMPLEMENT_APP(UnwordlerApp);
 

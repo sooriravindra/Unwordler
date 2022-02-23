@@ -7,6 +7,9 @@
 #include "button.h"
 #include "word_engine.h"
 
+extern const int ButtonLength;
+extern const int ButtonBuffer;
+
 class MyGrid : public wxEvtHandler {
  public:
   MyGrid(MyFrame *F, uint32_t rows, uint32_t columns);

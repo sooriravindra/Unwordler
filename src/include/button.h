@@ -10,7 +10,8 @@ enum class ButtonColor { Green, Amber, Grey };
 
 class MyButton : public wxButton {
  public:
-  MyButton(wxWindow *parent, wxWindowID id, const wxPoint &pos);
+  MyButton(wxWindow *parent, wxWindowID id, const wxPoint &pos,
+           const wxSize &size);
   void ToggleColor(wxCommandEvent &ev);
   ButtonColor GetCurrentColor();
   void SetColor(ButtonColor color);
