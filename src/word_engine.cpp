@@ -22,7 +22,7 @@ std::list<std::string> WordEngine::ReadWordBagFromFile(std::string file_name) {
   return s;
 }
 WordEngine::WordEngine() {
-  /* wordBag_ = std::move(WordEngine::ReadWordBagFromFile("../res/words.txt"));
+  /* wordBag_ = WordEngine::ReadWordBagFromFile("../res/words.txt");
    */
   wordBag_ = gWordList;
   possibleWords_ = wordBag_;
